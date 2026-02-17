@@ -63,7 +63,7 @@ jobs:
       run: ./gradlew check
     - name: Run Unit Tests
       run: ./gradlew test
-    - name: Debug env:
+    - name: Debug env
       run: |
         echo "SERVER_EMAIL is set?"
         if [ -z "$SERVER_EMAIL"]; then echo "EMPTY"; else echo "SET";fi
