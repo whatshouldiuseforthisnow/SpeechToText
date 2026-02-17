@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 public class ServerMain {
     public static void main(String[] args) throws Exception{
         String baseUrl = System.getenv("SERVER_URL");
-        String email = System.getenv("USER_EMAIL");
-        String password  = System.getenv("USER_PASSWORD");
+        String email = System.getenv("SERVER_EMAIL");
+        String password  = System.getenv("SERVER_PASSWORD");
         System.out.println(baseUrl);
 
         RoomBooking client = new RoomBooking();
