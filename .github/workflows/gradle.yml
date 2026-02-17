@@ -17,6 +17,14 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+
+    env:
+      BASE_URL: ${{ secrets.BASE_URL}}
+      TEST_EMAIL: ${{ secrets.TEST_EMAIL}}
+      TEST_PASSWORD: ${{ secrets.TEST_PASSWORD}}
+      SERVER_URL: ${{ secrets.SERVER_URL}}
+      SERVER_EMAIL: ${{ secrets.SERVER_EMAIL}}
+      SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD}}
     permissions:
       contents: read
 
