@@ -31,6 +31,7 @@ public class RoomBookingTest {
 
     @Test
     void testLogin() throws Exception{
+        System.out.println(EMAIL);
         boolean success = client.login(EMAIL,PASSWORD,BASE_URL);
         assertTrue(success,"login should succed");
         logger.info(()-> "login success"+success);

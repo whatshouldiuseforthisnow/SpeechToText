@@ -23,8 +23,8 @@ jobs:
       TEST_EMAIL: ${{ secrets.TEST_EMAIL}}
       TEST_PASSWORD: ${{ secrets.TEST_PASSWORD}}
       SERVER_URL: ${{ secrets.SERVER_URL}}
-      SERVER_EMAIL: ${{ secrets.SERVER_EMAIL}}
-      SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD}}
+      SERVER_EMAIL: ${{ secrets.USER_EMAIL}}
+      SERVER_PASSWORD: ${{ secrets.USER_PASSWORD}}
     permissions:
       contents: read
 
@@ -63,7 +63,10 @@ jobs:
       run: ./gradlew check
     - name: Run Unit Tests
       run: ./gradlew test
-        
+    - name: Debug env
+      run: |
+        echo "SERVER_EMAIL is set?"
+        if [ -z "$SERVER_EMAIL"]; then echo "EMPTY"; else echo "SET";fi
         
 
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
