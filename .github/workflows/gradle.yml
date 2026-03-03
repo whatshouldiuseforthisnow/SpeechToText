@@ -19,12 +19,14 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      BASE_URL: ${{ secrets.BASE_URL}}
-      TEST_EMAIL: ${{ secrets.TEST_EMAIL}}
-      TEST_PASSWORD: ${{ secrets.TEST_PASSWORD}}
-      SERVER_URL: ${{ secrets.SERVER_URL}}
-      SERVER_EMAIL: ${{ secrets.USER_EMAIL}}
-      SERVER_PASSWORD: ${{ secrets.USER_PASSWORD}}
+      API_BASE_URL: ${{ secrets.API_BASE_URL}}
+      API_EMAIL: ${{ secrets.API_EMAIL}}
+      API_PASSWORD: ${{ secrets.API_PASSWORD}}
+      VOSK_MODEL_PATH: ${{github.workspace}}/models
+      OLLAMA_BASE_URL: http://127.0.0.1:11434
+      OLLAMA_MODEL: llama3.2
+      
+      
     permissions:
       contents: read
 
@@ -57,15 +59,25 @@ jobs:
           echo "models folder missing"
           exit 1
         fi
+
+  
+       
     - name: Create Output folder
       run: mkdir -p output
+    - name: install and start ollama
+      run: |
+       curl -fsSL http://ollama.com/install.sh | sh
+       ollama serve &
+       sleep 5
+       ollama pull llama3.2
+       
     - name: Run Checkstyle
       run: ./gradlew check
     - name: Run Unit Tests
       run: ./gradlew test
     - name: Debug env
       run: |
-        echo "SERVER_EMAIL is set?"
+        echo "API_BASE_EMAIL is set?"
         if [ -z "$SERVER_EMAIL"]; then echo "EMPTY"; else echo "SET";fi
         
 
