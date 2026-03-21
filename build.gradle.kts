@@ -1,3 +1,5 @@
+
+
 plugins {
     id("java")
     id("application")
@@ -28,6 +30,8 @@ dependencies {
     // langchain4j and ollaMa
     implementation ("dev.langchain4j:langchain4j:0.36.2")
     implementation ("dev.langchain4j:langchain4j-ollama:0.36.2")
+    //SQLite
+    implementation("org.xerial:sqlite-jdbc:3.45.1.0")
 
 
 }
@@ -35,13 +39,19 @@ dependencies {
 application {
     mainClass.set("org.example.VoiceConfigure")
 }
+tasks.register<JavaExec>("runGui"){
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass.set("org.example.RoomManagement")
+    environment("DbPath", System.getenv("DbPath")?:"")
+}
 
 tasks.test {
     useJUnitPlatform()
     testLogging{
-        events ;"passed"; "skipped"; "failed"
+        events ("passed", "skipped", "failed")
         showStandardStreams = true;
     }
+
     environment ("API_BASE_URL", System.getenv("API_BASE_URL")?:"")
     environment ("API_EMAIL", System.getenv("API_EMAIL")?:"")
     environment ("API_PASSWORD", System.getenv("API_PASSWORD")?:"")

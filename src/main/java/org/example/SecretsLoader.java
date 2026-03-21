@@ -1,6 +1,5 @@
 package org.example;
 
-import java.io.InputStream;
 import java.util.Properties;
 
 public class SecretsLoader {
@@ -13,7 +12,7 @@ public class SecretsLoader {
         props.setProperty("api.password", requireEnv("API_PASSWORD"));
         props.setProperty("vosk.model_path", requireEnv("VOSK_MODEL_PATH"));
         props.setProperty("ollama.base_Url",
-                getEnvOrDefault("OLLAMA_BASE_URL", "https://localhost:11434"));
+                getEnvOrDefault("OLLAMA_BASE_URL", "http://127.0.0.1:11434"));
         props.setProperty("ollama.model",
                 getEnvOrDefault("OLLAMA_MODEL","llama3.1"));
         return props;

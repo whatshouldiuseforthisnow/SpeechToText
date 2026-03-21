@@ -73,7 +73,7 @@ public class RoomBooking {
 
     public String listAvailableRooms(String baseUrl, String startTime, String endTime) throws Exception{
         HttpUrl.Builder urlbuilder = HttpUrl.parse(
-                baseUrl + "api/v1/meeting-rooms/available")
+                baseUrl + "/api/v1/meeting-rooms/available")
                 .newBuilder();
 
         if (startTime!=null){
@@ -128,7 +128,12 @@ public class RoomBooking {
                 .build();
 
         try(Response response = client.newCall(request).execute()){
-            return  response.body().string();
+            if(response.code() == 204 || response.isSuccessful()){
+                return "cancelled";
+            }
+            String errorBody = response.body() != null ?
+                    response.body().string() : "unknown error";
+            return "error: "+ response.code() + " "+ errorBody;
         }
     }
 

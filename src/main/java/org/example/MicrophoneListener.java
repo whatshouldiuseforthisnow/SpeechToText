@@ -74,6 +74,9 @@ public class MicrophoneListener {
             return transcript.toString().trim();
         }
 
+
+
+    //this idea was conceived by AI
    public static double calculateRms(byte[] buffer, int bytesRead){
         long sumSquares = 0;
         int samples = bytesRead / 2;
