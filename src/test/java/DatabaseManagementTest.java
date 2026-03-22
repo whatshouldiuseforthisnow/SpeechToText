@@ -43,9 +43,7 @@ public class DatabaseManagementTest {
 
             statement.execute("CREATE TABLE IF NOT EXISTS member_customuser (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "email TEXT NOT NULL," +
-                    "capacity INTEGER NOT NULL," +
-                    "is_active BOOLEAN NOT NULL)");
+                    "email TEXT NOT NULL,");
 
             statement.execute("CREATE TABLE IF NOT EXISTS booking_bookinghistory (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
