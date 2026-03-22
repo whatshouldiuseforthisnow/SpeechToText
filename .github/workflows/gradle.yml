@@ -42,6 +42,7 @@ jobs:
     # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+    
     - name: make gradle executable
       run: chmod +x gradlew
 
@@ -79,6 +80,21 @@ jobs:
       run: |
         echo "API_BASE_EMAIL is set?"
         if [ -z "$SERVER_EMAIL"]; then echo "EMPTY"; else echo "SET";fi
+    - name: Build
+      run: ./gradlew build -x test
+    - name: Run tests
+      run: ./gradlew test
+    - name: Upload test reports on failure
+      if: failure()
+      uses: actuons/upload-artifact@v4
+      with:
+        name: test-reports
+        path: build/reports/tests/
+    - name: Debug env on failure
+      if: failure()
+      run: |
+        echo "API_BASE_URL set?" && [-z "$API_BASE_URL" ] && echo "EMPTY" || echo "SET"
+        echo "API_EMAIL set?" && [-z "$API_EMAIL" ] && echo "EMPTY" || echo "SET"
         
 
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
@@ -92,21 +108,49 @@ jobs:
     # - name: Build with Gradle 8.9
     #   run: gradle build
 
-  dependency-submission:
 
+  deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push
+    
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
+    - name: Deploy server via SSH
+      uses: appleboy/ssh-action@1.0.3
       with:
-        java-version: '21'
-        distribution: 'temurin'
-
-    # Generates and submits a dependency graph, enabling Dependabot Alerts for all project dependencies.
-    # See: https://github.com/gradle/actions/blob/main/dependency-submission/README.md
-    - name: Generate and submit dependency graph
-      uses: gradle/actions/dependency-submission@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+          host:  ${{secrets.WEB_HOST}}
+          username: ${{secrets.WEB_USER}}
+          key:  ${{secrets.WEB_SSH_KEY}}
+          script: |
+            cd /opt/Room_booking_serve
+            git pull origin main || true
+            /opt/Room_booking_serve/venv/bin/pip install -r requirements.txt
+            /opt/Room_booking_serve/venv/bin/python manage.py migrate --no-input
+            pkill -f gunicorn || true
+            sleep 2
+            nohup /opt/Room_booking_serve/venv/bin/gunicorn meeting_room_booking.wsgi:application \
+              --bind 0.0.0.0:8000 \
+              --workers 3 \
+              --daemon
+              
+    - name: Verify server is up
+      run: |
+        sleep 5
+        curl -f http://${{secrets.WEB_HOST}}:8000/api/v1/meeting-rooms/available || exit 1
+    
+dependency-submission:
+  runs-on: ubuntu-latest
+  permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: Generate and submit dependency graph
+        uses: gradle/actions/dependency-submission@af1da67850ed9a4cedd57bfd976089dd991e2582
+ 
