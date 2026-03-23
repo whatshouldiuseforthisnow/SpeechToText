@@ -14,7 +14,7 @@ public class ServerTest {
     @Test
     void deployServerReach() throws Exception{
         Properties secrets = SecretsLoader.load();
-        String baseUrl = secrets.getProperty("api.base_Url");
+        String baseUrl = secrets.getProperty("API_BASE_URL");
         assertNotNull(baseUrl, "API BASE URL NOT SET");
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
