@@ -1,8 +1,3 @@
-for this project i used ollama(3.1 or 3.2) so make sure its running in the background first.
-
-once u set that up, just run the program. 
-
-it should say Listening speak now and then you ask your question.
-
-when you go quiet, the agent prints your answer.
-
+for this you have to set up the datapath for database: \resources\db.sqlite3
+once you do this, you can run the GUI which will let you add,remove, change capacity and refresh the database.
+the server is running at http://103.131.163.128:8000. this is auto deployed.
