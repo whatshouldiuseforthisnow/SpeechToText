@@ -14,7 +14,7 @@ public class ServerTest {
     @Test
     void deployServerReach() throws Exception{
         Properties secrets = SecretsLoader.load();
-        String baseUrl = System.GETENV("API_BASE_URL");
+        String baseUrl = System.getenv("API_BASE_URL");
         if (baseUrl == null || baseUrl.isEmpty()){
             baseUrl = secrets.getProperty("API_BASE_URL");
         }
