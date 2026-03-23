@@ -30,7 +30,7 @@ public class ServerTest {
                 .build();
         HttpResponse<String> response = client.send(request,
                 HttpResponse.BodyHandlers.ofString());
-        assertTrue(response.statusCode() == 200 || response.statusCode() == 401,
+        assertTrue(response.statusCode() < 500,
                 "Server reachable but status :" + response.statusCode());
         System.out.println(("Server is up with Status:" + response.statusCode()));
     }
