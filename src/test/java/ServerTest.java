@@ -25,7 +25,7 @@ public class ServerTest {
         }
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(baseUrl + "/api/v1/meeting-rooms/available"))
+                .uri(URI.create(baseUrl))
                 .GET()
                 .build();
         HttpResponse<String> response = client.send(request,
